@@ -1,7 +1,43 @@
 <?php
+
+  session_start();
+
   include('dbcon.php');
-  $val = 'Carbohydrates';
-  $result = mysqli_query($conn,"SELECT food_and_beverage.fnb_id, food_and_beverage.fnb_name, nutrient_tbl.nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
+  // Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handle form submission
+    $selectedNutrient = $_POST['nutrients'];
+
+    // Perform any necessary validation or processing
+
+    // Update session variable
+    $_SESSION['selectedNutrient'] = $selectedNutrient;
+
+    // Redirect to the same page to avoid form resubmission on page refresh
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Check if a nutrient is selected in the session
+if (isset($_SESSION['selectedNutrient'])) {
+    $selectedNutrient = $_SESSION['selectedNutrient'];
+
+    // Use a prepared statement to prevent SQL injection
+    $stmt = mysqli_prepare($conn, "SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id WHERE nutrient_tbl.nutri_name = ?");
+    
+    // Bind the parameter
+    mysqli_stmt_bind_param($stmt, "s", $selectedNutrient);
+    
+    // Execute the query
+    mysqli_stmt_execute($stmt);
+    
+    // Get the result
+    $result = mysqli_stmt_get_result($stmt);
+
+} else {
+    // If no nutrient is selected, retrieve all data
+    $result = mysqli_query($conn, "SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -137,18 +173,6 @@
             outline: none;
         }
 
-        button.gen_btn {
-
-            background-color: rgb(255, 217, 122);
-            border: none;
-            border-radius: 5px;
-            color: #000;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 10px 20px;
-            margin-top: 50px;
-        }
-
         div.footer_left {
 
             width: 400px;
@@ -265,34 +289,23 @@
             <label for="" class="left_txt_bot">
                 FROM THE OPTIONS BELOW
             </label>
+
+            <form id="myForm" method="post" action="">
     
                 <select name="nutrients" id="nutrients" onchange="updateVariable(this.value)">
-                    <option value="Carbohydrates">Carbohydrates</option>
-                    <option value="Fats">Fats</option>
-                    <option value="Protein">Protein</option>
-                    <option value="Fiber">Fiber</option>
-                    <option value="Vitamins">Vitamins</option>
-                    <option value="Calcium">Calcium</option>
-                    <option value="Iron">Iron</option>
-                    <option value="Sodium">Sodium</option>
-                    <option value="Potassium">Potassium</option>
-                    <option value="Sugar">Sugar</option>
+                    <option value="Carbohydrates" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Carbohydrates') echo 'selected'; ?>>Carbohydrates</option>
+                    <option value="Fats" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Fats') echo 'selected'; ?>>Fats</option>
+                    <option value="Protein" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Protein') echo 'selected'; ?>>Protein</option>
+                    <option value="Fiber" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Fiber') echo 'selected'; ?>>Fiber</option>
+                    <option value="Vitamins" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Vitamins') echo 'selected'; ?>>Vitamins</option>
+                    <option value="Calcium" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Calcium') echo 'selected'; ?>>Calcium</option>
+                    <option value="Iron" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Iron') echo 'selected'; ?>>Iron</option>
+                    <option value="Sodium" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Sodium') echo 'selected'; ?>>Sodium</option>
+                    <option value="Potassium" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Potassium') echo 'selected'; ?>>Potassium</option>
+                    <option value="Sugar" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Sugar') echo 'selected'; ?>>Sugar</option>
                 </select>
-
-                <script>
-
-                    function updateVariable(value) {
-
-                        var xhttp = new XMLHttpRequest();
-                        xhttp.open("POST", "update_variable.php", true);
-                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                        xhttp.send("value="+value);
-                    }
-                </script>
-                
-                <button type="submit" class="gen_btn" name="gen">
-                    GENERATE
-                </button>
+                <input type="submit" style="display:none" id="submitBtn">
+            </form>
         </div>
 
         <div class="main_right">
@@ -350,5 +363,17 @@
             </label>
         </div>
     </div>
+
+    <script>
+
+        function updateVariable(value) {
+            
+            // Update hidden input value
+            document.getElementById("nutrients").value = value;
+            
+            // Submit the form
+            document.getElementById("myForm").submit();
+        }
+    </script>
 </body>
 </html>

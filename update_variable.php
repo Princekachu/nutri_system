@@ -1,7 +1,23 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $value = $_POST['value'];
-  // Now you can use the $value variable in your PHP code
-  $result = mysqli_query($conn,"SELECT foodandbeverage.fnb_id, foodandbeverage.fnb_name, nutrient.nutri_desc FROM foodandbeverage JOIN nutrient ON foodandbeverage.nutri_id = nutrient.nutri_id WHERE nutrient.nutri_name = '$value'");
-}
+
+    session_start();
+    include('dbcon.php');
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['value'])) {
+            $val = $_POST['value'];
+
+            $stmt = $conn->prepare("SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id WHERE nutrient_tbl.nutri_name = ?");
+            $stmt->bind_param("s", $val);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            // Store the result in the session variable
+            $_SESSION['result'] = $result->fetch_all(MYSQLI_ASSOC);
+
+            $stmt->close();
+        }
+    } else {
+        echo '<script>window.close();</script>';
+    }
 ?>
