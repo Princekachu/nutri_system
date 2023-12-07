@@ -250,16 +250,14 @@ if (isset($_SESSION['selectedNutrient'])) {
 
             padding: 10px;
             text-align: center;
+
+            vertical-align: top;
         }
 
         td.cell_desc {
 
             padding: 10px;
-        }
-
-        #output {
-
-
+            vertical-align: top;
         }
 
     </style>

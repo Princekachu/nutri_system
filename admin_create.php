@@ -94,20 +94,29 @@
 
         label.left_txt_top {
 
-            color: #ffffff;
-            font-size: 18px;
+            color: rgb(255, 217, 122)  ;
+            font-size: 25px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: -80px;
+
+            text-align: center;
+            padding: 0 50px;
+        }
+
+        label.left_txt_bot {
+
+            color: #ffffff;
+            font-size: 16px;
+            margin-top: -50px;
         }
 
         img.left_img {
 
-            width: 200px;
+            width: 550px;
             height: auto;
 
             filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
-
-            margin-bottom: 60px;
+            margin-top: 30px;
         }
 
         select {
@@ -183,49 +192,50 @@
             line-height: 1.7;
         }
 
-        tr.head_tbl {
+        div.parent {
 
-            background-color: #f2f2f2;
-            height: 40px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 50px;
+        }
+
+        div.child_1, div.child_2, div.child_3 {
+
+            width: 300px;
+            height: 100px;
+            background-color: rgb(68, 84, 106);
             text-align: center;
+            line-height: 100px;
+            cursor: pointer;
+            border-radius: 5px;
 
-            font-size: 14px;
+            font-size: 20px;
+        }
+
+        div.child_2, div.child_3 {
+
+            background-color: rgb(255, 217, 122);
+        }   
+
+        span {
+
+            display: inline-block;
+
+            margin-top: 12px;
             font-weight: bold;
-
-            position: sticky;
-            top: 0;
+            
+            color: #000000;
         }
 
-        tr.rows_txt {
+        span.create {
 
-            font-size: 15px;
-            font-weight: bold;
-            color: #f2f2f2;
+            color: rgb(255, 217, 122);
         }
 
-        table {
+        span.update, span.delete {
 
-            border-collapse: separate;
-            border-spacing: 3px;
-
-            height: 700px;
-            overflow: auto;
-        }
-
-        td.cell {
-
-            padding: 10px;
-            text-align: center;
-        }
-
-        td.cell_desc {
-
-            padding: 10px;
-        }
-
-        #output {
-
-
+            color: #333;
         }
 
     </style>
@@ -246,16 +256,34 @@
 
         <div class="main_left">
 
-            <img src="SGD-logo.png" alt="Image description" class="left_img">
-
             <label for="" class="left_txt_top">
-                ADD
+                UNITED NATION'S SUSTAINABLE DEVELOPMENT GOALS
+            </label>
+
+            <img src="SDG-logo.png" alt="Image description" class="left_img">
+
+            <label for="" class="left_txt_bot">
+                ADD FOOD/BEVERAGE IN THE DATABASE
             </label>
         </div>
 
         <div class="main_right">
 
-            
+            <div class="parent">
+                <div class="child_1" onclick="handleClick(1)">
+                    <span class="create">CREATE</span>
+                </div>
+                    <div class="child_2" onclick="handleClick(2)">
+                    <span class="update">UPDATE</span>
+                </div>
+                    <div class="child_3" onclick="handleClick(3)">
+                    <span class="delete">DELETE</span>
+                </div>
+            </div>
+
+            <div class="main_pnl">
+                
+            </div>
         </div>
     </div>
 
