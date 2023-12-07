@@ -2,8 +2,19 @@
 
   include('dbcon.php');
  
-    $result = mysqli_query($conn, "SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
-
+  if (isset($_POST['submit'])) {
+    $name = $_POST['name'];
+    $nutrient = $_POST['nutrients'];
+    $category = $_POST['categories'];
+    $sql = "INSERT INTO `food_and_beverage`(`fnb_name`, `nutri_id`, `cat_id`) VALUES ('$name','$nutrient','$category')";
+    $result = $conn->query($sql);
+    if ($result == TRUE) {
+      echo "New record created successfully.";
+    }else{
+      echo "Error:". $sql . "<br>". $conn->error;
+    } 
+    $conn->close(); 
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -237,6 +248,7 @@
             margin-top: 12px;
             font-weight: bold;
             font-size: 20px;
+            letter-spacing: 2px;
             
             color: #333;
         }
@@ -244,8 +256,8 @@
         .input-style {
 
             border: 1.5px solid #fff;
-            width: 234px;
-            height: 26px;
+            width: 250px;
+            height: 35px;
             border-radius: 4px;
             overflow: hidden;
             background: #fafafa;
@@ -273,7 +285,7 @@
             border-radius: 25px;
             font-weight: bold;
 
-            margin-top: 10px;
+            margin-top: 22px;
         }
 
         span {
@@ -281,9 +293,11 @@
             display: inline-block;
             
             color: rgb(255, 217, 122);
-            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
             font-size: 15px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
 
         form {
@@ -291,8 +305,8 @@
             background-color: #000000;
             opacity: 80%;
 
-            width: 320px;
-            height: 360px;
+            width: 330px;
+            height: 380px;
             border-radius: 10px;
             padding-top: 25px;
         }
@@ -345,10 +359,10 @@
                 <form method="post" action="">
 
                     <span>NAME</span>
-                    <br><input class="input-style" type="text" placeholder="ex. Pineapple"><br>
+                    <br><input class="input-style" type="text" name="name" placeholder="ex. Pineapple" required><br>
         
                     <br><span>NUTRIENT</span><br>
-                    <select name="nutrients" id="nutrients">
+                    <select name="nutrients" id="nutrients" required>
                         <option value="1">Carbohydrates</option>
                         <option value="2">Fats</option>
                         <option value="3">Protein</option>
@@ -362,12 +376,12 @@
                     </select><br>
 
                     <br><span>CATEGORY</span><br>
-                    <select name="categories" id="categories">
+                    <select name="categories" id="categories" required>
                         <option value="1">Food</option>
                         <option value="2">Beverage</option>
                     </select><br>
 
-                    <br><input class="submit_btn" type="submit" value="SUBMIT">
+                    <br><input class="submit_btn" type="submit" name="submit" value="SUBMIT">
                 </form>
             </div>
         </div>
