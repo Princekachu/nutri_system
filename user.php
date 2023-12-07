@@ -1,7 +1,7 @@
 <?php
   include('dbcon.php');
   $val = 'Carbohydrates';
-  $result = mysqli_query($conn,"SELECT foodandbeverage.fnb_id, foodandbeverage.fnb_name, nutrient.nutri_desc FROM foodandbeverage JOIN nutrient ON foodandbeverage.nutri_id = nutrient.nutri_id ORDER BY fnb_id ");
+  $result = mysqli_query($conn,"SELECT food_and_beverage.fnb_id, food_and_beverage.fnb_name, nutrient_tbl.nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +100,7 @@
 
         img.left_img {
 
-            width: 450px;
+            width: 200px;
             height: auto;
 
             filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
@@ -256,7 +256,7 @@
 
         <div class="main_left">
 
-            <img src="SGD2.png" alt="Image description" class="left_img">
+            <img src="E_GIF_02.gif" alt="Image description" class="left_img">
 
             <label for="" class="left_txt_top">
                 PLEASE CHOOSE
@@ -266,9 +266,7 @@
                 FROM THE OPTIONS BELOW
             </label>
     
-            <form method="post" action="">
-    
-                <select name="nutrients" id="nutrients">
+                <select name="nutrients" id="nutrients" onchange="updateVariable(this.value)">
                     <option value="Carbohydrates">Carbohydrates</option>
                     <option value="Fats">Fats</option>
                     <option value="Protein">Protein</option>
@@ -280,31 +278,21 @@
                     <option value="Potassium">Potassium</option>
                     <option value="Sugar">Sugar</option>
                 </select>
-                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <script>
+
+                    function updateVariable(value) {
+
+                        var xhttp = new XMLHttpRequest();
+                        xhttp.open("POST", "update_variable.php", true);
+                        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                        xhttp.send("value="+value);
+                    }
+                </script>
+                
                 <button type="submit" class="gen_btn" name="gen">
                     GENERATE
                 </button>
-            </form>
-    
-            <?php
-
-                if(array_key_exists('gen', $_POST)) {
-                    
-                    gen();
-                }
-
-                function gen() {
-                    
-                    include('dbcon.php');
-                    if(isset($_POST['submit'])) {
-                        
-                        $val = $_POST['nutrients'];
-                        
-                        $result = mysqli_query($conn,"SELECT foodandbeverage.fnb_id, foodandbeverage.fnb_name, nutrient.nutri_desc FROM foodandbeverage JOIN nutrient ON foodandbeverage.nutri_id = nutrient.nutri_id WHERE nutrient.nutri_name = '$val'");
-
-                   }
-               }
-            ?>
         </div>
 
         <div class="main_right">
