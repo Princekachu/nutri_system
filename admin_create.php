@@ -65,6 +65,21 @@
             flex-direction: column;
 
             overflow-x: auto;
+
+            background-image: url('BG-main.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        div.main_pnl {
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            height: 645px;
         }
 
         div.footer {
@@ -128,9 +143,7 @@
             color: #333;
             font-size: 16px;
             padding: 10px;
-            width: 200px;
-
-            margin-top: 40px;
+            width: 250px;
         }
 
         select::-ms-expand {
@@ -204,38 +217,84 @@
 
             width: 300px;
             height: 100px;
-            background-color: rgb(68, 84, 106);
+            background-color: rgb(255, 217, 122);
             text-align: center;
             line-height: 100px;
             cursor: pointer;
             border-radius: 5px;
-
-            font-size: 20px;
+            box-shadow: 0px 0px 2px black;
         }
 
         div.child_2, div.child_3 {
 
-            background-color: rgb(255, 217, 122);
+            background-color: WHITE;
         }   
 
-        span {
+        span.create, span.update, span.delete {
 
             display: inline-block;
 
             margin-top: 12px;
             font-weight: bold;
+            font-size: 20px;
             
-            color: #000000;
-        }
-
-        span.create {
-
-            color: rgb(255, 217, 122);
-        }
-
-        span.update, span.delete {
-
             color: #333;
+        }
+
+        .input-style {
+
+            border: 1.5px solid #fff;
+            width: 234px;
+            height: 26px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fafafa;
+            padding: 5px 8px;
+        }
+
+        .input-style input {
+
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        input:focus {
+
+            outline: none;
+        }
+
+        input.submit_btn {
+
+            border: 1px solid #ccc;
+            width: 170px;
+            height: 35px;
+            border-radius: 25px;
+            font-weight: bold;
+
+            margin-top: 10px;
+        }
+
+        span {
+
+            display: inline-block;
+            
+            color: rgb(255, 217, 122);
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        form {
+
+            background-color: #000000;
+            opacity: 80%;
+
+            width: 320px;
+            height: 360px;
+            border-radius: 10px;
+            padding-top: 25px;
         }
 
     </style>
@@ -283,6 +342,33 @@
 
             <div class="main_pnl">
                 
+                <form method="post" action="">
+
+                    <span>NAME</span>
+                    <br><input class="input-style" type="text" placeholder="ex. Pineapple"><br>
+        
+                    <br><span>NUTRIENT</span><br>
+                    <select name="nutrients" id="nutrients">
+                        <option value="1">Carbohydrates</option>
+                        <option value="2">Fats</option>
+                        <option value="3">Protein</option>
+                        <option value="4">Fiber</option>
+                        <option value="5">Vitamins</option>
+                        <option value="6">Calcium</option>
+                        <option value="7">Iron</option>
+                        <option value="8">Sodium</option>
+                        <option value="9">Potassium</option>
+                        <option value="10">Sugar</option>
+                    </select><br>
+
+                    <br><span>CATEGORY</span><br>
+                    <select name="categories" id="categories">
+                        <option value="1">Food</option>
+                        <option value="2">Beverage</option>
+                    </select><br>
+
+                    <br><input class="submit_btn" type="submit" value="SUBMIT">
+                </form>
             </div>
         </div>
     </div>
@@ -307,17 +393,5 @@
             </label>
         </div>
     </div>
-
-    <script>
-
-        function updateVariable(value) {
-            
-            // Update hidden input value
-            document.getElementById("nutrients").value = value;
-            
-            // Submit the form
-            document.getElementById("myForm").submit();
-        }
-    </script>
 </body>
 </html>
