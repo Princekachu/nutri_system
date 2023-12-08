@@ -407,5 +407,26 @@
             </label>
         </div>
     </div>
+
+    <script>
+        function handleClick(buttonNumber) {
+
+            switch (buttonNumber) {
+
+                case 1:
+                    alert("Create button clicked");
+                    // Add your create logic here
+                    break;
+                case 2:
+                    alert("Update button clicked");
+                    // Add your update logic here
+                    break;
+                case 3:
+                    alert("Delete button clicked");
+                    // Add your delete logic here
+                    break;
+            }
+        }
+    </script>
 </body>
 </html>
