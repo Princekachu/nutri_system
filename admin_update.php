@@ -10,7 +10,7 @@
     $sql = "UPDATE `food_and_beverage` SET `fnb_name`='$name',`nutri_id`='$nutrient',`cat_id`='$category' WHERE `fnb_id`='$id'";
     $result = $conn->query($sql);
     if ($result == TRUE) {
-      echo "New record created successfully.";
+      echo "New record is updated successfully.";
     }else{
       echo "Error:". $sql . "<br>". $conn->error;
     } 
@@ -269,7 +269,7 @@
         .input-id-style {
 
             border: 1.5px solid #fff;
-            width: 80px;
+            width: 110px;
             height: 80px;
             border-radius: 10px;
             overflow: hidden;
@@ -344,6 +344,9 @@
         form {
 
             display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
 
     </style>
