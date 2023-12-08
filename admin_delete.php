@@ -461,16 +461,13 @@
             switch (buttonNumber) {
 
                 case 1:
-                    alert("Create button clicked");
-                    // Add your create logic here
+                    window.location.href = 'admin_create.php';
                     break;
                 case 2:
-                    alert("Update button clicked");
-                    // Add your update logic here
+                    window.location.href = 'admin_update.php';
                     break;
                 case 3:
-                    alert("Delete button clicked");
-                    // Add your delete logic here
+                    //alert("Delete button clicked");
                     break;
             }
         }
