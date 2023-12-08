@@ -256,8 +256,8 @@
         .input-style {
 
             border: 1.5px solid #fff;
-            width: 253px;
-            height: 37px;
+            width: 235px;
+            height: 30px;
             border-radius: 4px;
             overflow: hidden;
             background: #fafafa;
