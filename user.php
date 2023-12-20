@@ -23,7 +23,7 @@ if (isset($_SESSION['selectedNutrient'])) {
     $selectedNutrient = $_SESSION['selectedNutrient'];
 
     // Use a prepared statement to prevent SQL injection
-    $stmt = mysqli_prepare($conn, "SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id WHERE nutrient_tbl.nutri_name = ?");
+    $stmt = mysqli_prepare($conn, "SELECT fnb_id, fnb_name, fnb_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id WHERE nutrient_tbl.nutri_name = ?");
     
     // Bind the parameter
     mysqli_stmt_bind_param($stmt, "s", $selectedNutrient);
@@ -36,7 +36,7 @@ if (isset($_SESSION['selectedNutrient'])) {
 
 } else {
     // If no nutrient is selected, retrieve all data
-    $result = mysqli_query($conn, "SELECT fnb_id, fnb_name, nutri_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
+    $result = mysqli_query($conn, "SELECT fnb_id, fnb_name, fnb_desc FROM food_and_beverage JOIN nutrient_tbl ON food_and_beverage.nutri_id = nutrient_tbl.nutri_id ORDER BY fnb_id");
 }
 ?>
 <!DOCTYPE html>
@@ -44,6 +44,7 @@ if (isset($_SESSION['selectedNutrient'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
     <title>Nutritional Guide </title>
 
     <style>
@@ -155,7 +156,10 @@ if (isset($_SESSION['selectedNutrient'])) {
             padding: 10px;
             width: 200px;
 
-            margin-top: 40px;
+            margin-top: 35px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
 
         select::-ms-expand {
@@ -239,11 +243,14 @@ if (isset($_SESSION['selectedNutrient'])) {
 
         table {
 
-            border-collapse: separate;
-            border-spacing: 3px;
+            border-collapse: collapse;
+            border-spacing: 0;
 
             height: 700px;
             overflow: auto;
+
+            table-layout: fixed;
+            vertical-align: top;
         }
 
         td.cell {
@@ -258,6 +265,32 @@ if (isset($_SESSION['selectedNutrient'])) {
 
             padding: 10px;
             vertical-align: top;
+        }
+
+        #searchInput {
+
+            position: sticky;
+            top: 1; /* Will stick to the top of the screen when scrolled */
+            height: 50px; /* Adjust to your desired height */
+            border-radius: 5px; /* Maintain consistent styling */
+        }
+
+        input:focus {
+
+            outline: none;
+        }
+
+        label.gen_desc {
+
+            font-size: 15px;
+            font-weight: bold;
+            color: #f2f2f2;
+
+            display: inline-block;
+            text-align: center;
+            line-height: 1.5;
+
+            padding: 0 45px;
         }
 
     </style>
@@ -303,6 +336,20 @@ if (isset($_SESSION['selectedNutrient'])) {
                     <option value="Sugar" <?php if (isset($selectedNutrient) && $selectedNutrient == 'Sugar') echo 'selected'; ?>>Sugar</option>
                 </select>
                 <input type="submit" style="display:none" id="submitBtn">
+                    <br><br>
+                <label class="gen_desc">
+                    <?php
+                    
+                        $query = "SELECT nutri_desc FROM nutrient_tbl WHERE nutri_name = '$selectedNutrient'";
+
+                        $res = $conn->query($query);
+
+                        while ($row = $res->fetch_assoc()) {
+                            // Do something with each row of data
+                            echo $row['nutri_desc'];
+                        }
+                    ?>
+                </label>
             </form>
         </div>
 
@@ -311,7 +358,10 @@ if (isset($_SESSION['selectedNutrient'])) {
             <?php
                 if (mysqli_num_rows($result) > 0) {
                 ?>
-                <table id="output">
+
+                <input type="text" id="searchInput" placeholder="Search by food name..." style="margin-bottom: 5px; font-size: 15px; padding: 15px; height: 20px;">
+
+                <table id="output" class="display">
                 
                 <tr class="head_tbl">
                     <td>ID</td>
@@ -325,7 +375,7 @@ if (isset($_SESSION['selectedNutrient'])) {
                 <tr class="rows_txt">
                     <td class="cell"><?php echo $row["fnb_id"]; ?></td>    
                     <td class="cell"><?php echo $row["fnb_name"]; ?></td>
-                    <td class="cell_desc"><?php echo $row["nutri_desc"]; ?></td>
+                    <td class="cell_desc"><?php echo $row["fnb_desc"]; ?></td>
                 </tr>
                 <?php
                 $i++;
@@ -362,6 +412,9 @@ if (isset($_SESSION['selectedNutrient'])) {
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
+
     <script>
 
         function updateVariable(value) {
@@ -372,6 +425,39 @@ if (isset($_SESSION['selectedNutrient'])) {
             // Submit the form
             document.getElementById("myForm").submit();
         }
+
+        $(document).ready(function () {
+            // Store the original table data
+            let originalData = $('#output tbody tr').toArray();
+
+            $('#searchInput').on('input', function () {
+                let searchQuery = $(this).val().toLowerCase().trim();
+
+                // Filter the table data based on the search query
+                let filteredData = originalData.filter(function (row) {
+                    return row.children[1].textContent.toLowerCase().includes(searchQuery);
+                });
+
+                // Empty the table body before adding filtered rows
+                $('#output tbody').empty();
+
+                // Append the filtered rows to the table
+                filteredData.forEach(function (row) {
+                    $('#output tbody').append(row);
+                });
+
+                // Update the DataTable
+                $('#output').DataTable().draw();
+            });
+
+            // Initialize DataTables plugin with fixed header
+            $('#output').DataTable({
+                scrollY: '400px', // Adjust the height as needed
+                scrollCollapse: true,
+                paging: false,
+                fixedHeader: true
+            });
+        });
     </script>
 </body>
 </html>

@@ -338,6 +338,14 @@
 
             width: 330px;
             height: 380px;
+            padding-left: 10px;
+            padding-bottom: 40px;
+
+            overflow-y: auto;
+            max-height: 645px;
+
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
         }
 
         form {
@@ -346,6 +354,30 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
+        }
+
+        .input-style-desc {
+
+            border: 1.5px solid #fff;
+            width: 250px;
+            height: 150px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fafafa;
+            padding: 5px 8px;
+        }
+
+        .input-style-desc input {
+
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        textarea {
+
+            resize: none;
         }
 
     </style>
@@ -398,16 +430,20 @@
                     <div class="identify">
 
                         <span>ID NUMBER</span>
-                        <br><input class="input-id-style" type="number" name="id_num" placeholder="ex. 10" required oninput="fetchData(this.value)">
+                        <br><input class="input-id-style" type="number" name="id_num" placeholder="ex. 10" readonly>
                     </div>
                     
                     <div class="updation">
 
                         <span>NAME</span>
-                        <br><input class="input-style" type="text" name="name" required><br>
+                        <br><input class="input-style" type="text" name="name" required oninput="fetchData(this.value)"><br>
+
+                        
+                        <span>DESCRIPTION</span>
+                        <br><textarea rows="4" cols="50" class="input-style-desc" name="description" placeholder="Enter your text here..." disabled></textarea><br>
             
                         <br><span>NUTRIENT</span><br>
-                        <select name="nutrients" id="nutrients" required>
+                        <select name="nutrients" id="nutrients" disabled>
                             <option value="1">Carbohydrates</option>
                             <option value="2">Fats</option>
                             <option value="3">Protein</option>
@@ -421,7 +457,7 @@
                         </select><br>
 
                         <br><span>CATEGORY</span><br>
-                        <select name="categories" id="categories" required>
+                        <select name="categories" id="categories" disabled>
                             <option value="1">Food</option>
                             <option value="2">Beverage</option>
                         </select><br>
@@ -472,21 +508,18 @@
             }
         }
 
-        function fetchData(id) {
-            // Use AJAX or fetch to send a request to the server and get data based on the input ID
-            // For simplicity, I'll use a placeholder function here
-
-            // Assume there's a PHP script on the server that fetches data based on the ID
-            // Replace 'your_fetch_data_script.php' with the actual script name
-            fetch(`fetch_id.php?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                // Update other form elements with the fetched data
-                document.querySelector('input[name="name"]').value = data.name;
-                document.querySelector('select[name="nutrients"]').value = data.nutrient;
-                document.querySelector('select[name="categories"]').value = data.category;
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        function fetchData(name) {
+            fetch(`fetch_id.php?name=${name}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Add this line for debugging
+                    // Update other form elements with the fetched data
+                    document.querySelector('input[name="id_num"]').value = data.id_num;
+                    document.querySelector('textarea[name="description"]').value = data.description;
+                    document.querySelector('select[name="nutrients"]').value = data.nutrient;
+                    document.querySelector('select[name="categories"]').value = data.category;
+                })
+                .catch(error => console.error('Error fetching data:', error));
         }
     </script>
 </body>

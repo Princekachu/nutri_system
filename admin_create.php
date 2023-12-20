@@ -4,9 +4,10 @@
  
   if (isset($_POST['submit'])) {
     $name = $_POST['name'];
+    $description = $_POST['description'];
     $nutrient = $_POST['nutrients'];
     $category = $_POST['categories'];
-    $sql = "INSERT INTO `food_and_beverage`(`fnb_name`, `nutri_id`, `cat_id`) VALUES ('$name','$nutrient','$category')";
+    $sql = "INSERT INTO `food_and_beverage`(`fnb_name`, `fnb_desc`, `nutri_id`, `cat_id`) VALUES ('$name', '$description', '$nutrient','$category')";
     $result = $conn->query($sql);
     if ($result == TRUE) {
       echo "New record created successfully.";
@@ -90,7 +91,7 @@
             align-items: center;
             text-align: center;
 
-            height: 645px;
+            height: 3000px; 
         }
 
         div.footer {
@@ -256,8 +257,8 @@
         .input-style {
 
             border: 1.5px solid #fff;
-            width: 235px;
-            height: 30px;
+            width: 250px;
+            height: 38px;
             border-radius: 4px;
             overflow: hidden;
             background: #fafafa;
@@ -309,6 +310,38 @@
             height: 380px;
             border-radius: 10px;
             padding-top: 25px;
+            padding-bottom: 40px;
+            padding-left: 10px;
+
+            overflow-y: auto;
+            max-height: 645px;
+
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+        }
+
+        .input-style-desc {
+
+            border: 1.5px solid #fff;
+            width: 250px;
+            height: 150px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #fafafa;
+            padding: 5px 8px;
+        }
+
+        .input-style-desc input {
+
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        textarea {
+
+            resize: none;
         }
 
     </style>
@@ -359,7 +392,10 @@
                 <form method="post" action="">
 
                     <span>NAME</span>
-                    <br><input class="input-style" type="text" name="name" placeholder="ex. Pineapple" required><br>
+                    <br><input class="input-style" type="text" name="name" placeholder="ex. Pineapple" required><br><br>
+
+                    <span>DESCRIPTION</span>
+                    <br><textarea rows="4" cols="50" class="input-style-desc" name="description" placeholder="Enter your text here..." required></textarea><br>
         
                     <br><span>NUTRIENT</span><br>
                     <select name="nutrients" id="nutrients" required>
